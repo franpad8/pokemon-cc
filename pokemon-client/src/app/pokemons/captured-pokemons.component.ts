@@ -3,6 +3,7 @@ import { AfterViewInit, Component } from "@angular/core";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { Pokemon } from "../pokemon";
 import { PokemonDataService } from "../pokemon-data.service";
+import { Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-captured-pokemons',
@@ -17,20 +18,27 @@ import { PokemonDataService } from "../pokemon-data.service";
 export class CapturedPokemonsComponent implements AfterViewInit {
   columns = ['name', 'image']
   dataSource = new MatTableDataSource<Pokemon>();
+  @Output() onUncaptureEvent = new EventEmitter<string>();
 
   constructor (private pokemonDataService: PokemonDataService) {}
 
   toggleCaptured(pokemonRow: Pokemon) {
     this.pokemonDataService.toggleCaptured(pokemonRow).subscribe(() => {
-      this.refreshTableData()
+      this.refreshTableData$()
     })
+
+    this.onUncaptureEvent.emit()
+  }
+
+  retrieveCaptured() {
+    this.refreshTableData$()
   }
 
   ngAfterViewInit(): void {
-    this.refreshTableData()
+    this.refreshTableData$()
   }
 
-  private refreshTableData() {
+  private refreshTableData$() {
     this.pokemonDataService.getCaptured().subscribe((data)=> {
       this.dataSource = new MatTableDataSource<Pokemon>(data.results)
     })

@@ -7,8 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatChipsModule } from '@angular/material/chips';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { FormControl } from '@angular/forms';
 
 
@@ -25,7 +24,6 @@ import { CapturedPokemonsComponent } from './captured-pokemons.component';
             MatTableModule,
             MatPaginatorModule,
             CommonModule,
-            MatChipsModule,
             FormsModule,
             ReactiveFormsModule,
             MatInputModule],
@@ -44,6 +42,7 @@ export class PokemonsComponent implements AfterViewInit {
   typeFilter = new FormControl();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(CapturedPokemonsComponent, { static: false }) capturedPokemonComponent!: CapturedPokemonsComponent
 
   constructor(private pokemonDataService: PokemonDataService) {}
 
@@ -53,15 +52,20 @@ export class PokemonsComponent implements AfterViewInit {
 
   toggleCaptured(pokemonRow: Pokemon) {
     this.pokemonDataService.toggleCaptured(pokemonRow).subscribe(() => {
-      var nameFilter = this.nameFilter.value == null ? '' : this.nameFilter.value;
-      var typeFilter = this.typeFilter.value == null ? '' : this.typeFilter.value;
-      this.getTableData$(
-        nameFilter,
-        typeFilter,
-        this.paginator.pageIndex
-      ).subscribe((data) => {
-        this.dataSource = new MatTableDataSource<Pokemon>(data.results)
-      })
+      this.refreshPokemonTableData()
+      this.capturedPokemonComponent.retrieveCaptured()
+    })
+  }
+
+  refreshPokemonTableData () {
+    var nameFilter = this.nameFilter.value == null ? '' : this.nameFilter.value;
+    var typeFilter = this.typeFilter.value == null ? '' : this.typeFilter.value;
+    this.getTableData$(
+      nameFilter,
+      typeFilter,
+      this.paginator.pageIndex
+    ).subscribe((data) => {
+      this.dataSource = new MatTableDataSource<Pokemon>(data.results)
     })
   }
 
