@@ -6,7 +6,7 @@ module Pokemons
       ActiveRecord::Base.transaction do
         Pokemon.delete_all
         pokemons = []
-        (1..35).each do |id|
+        (1..150).each do |id|
           pokemon_details_url = "https://pokeapi.co/api/v2/pokemon/#{id}"
           response = RestClient.get(pokemon_details_url, { accept: :json })
           data = JSON.parse(response)
