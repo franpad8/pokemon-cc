@@ -1,0 +1,15 @@
+{
+  "name": "pokemon-cc",
+  "version": "1.0.0",
+  "scripts": {
+    "install-api": "cd pokemon-api && bundle install",
+    "install-client": "npm install --prefix pokemon-client",
+    "install": "npm run install-api && npm run install-client",
+    "start-api": "cd pokemon-api && bin/rails s",
+    "start-client": "cd pokemon-client && ng serve",
+    "start": "npm run start-api & npm run start-client"
+  },
+  "keywords": [],
+  "author": "Franklin Padilla",
+  "license": "ISC"
+}
