@@ -9,8 +9,9 @@ class PokemonsController < ApplicationController
 
     @current_page = params['page'].to_i
     @total_count = query.count
-    @pokemons = query.offset(10 * @current_page).limit(10)
     @page_count = (@total_count % 10).positive? ? @total_count / 10 + 1 : @total_count / 10
+    @current_page = 0 if @current_page >= @page_count
+    @pokemons = query.offset(10 * @current_page).limit(10)
     render
   end
 
