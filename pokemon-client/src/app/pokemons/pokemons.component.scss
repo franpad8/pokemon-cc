@@ -1,0 +1,31 @@
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2rem;
+}
+
+.table-filter-container {
+  grid-column: span 3;
+}
+
+.table-container {
+  grid-column: span 2;
+}
+
+table {
+  width: 100%;
+}
+
+th.mat-mdc-header-cell, td.mat-mdc-cell {
+  text-align: center !important;
+}
+
+.mat-mdc-row .mat-mdc-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  cursor: pointer;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  border-color: currentColor;
+}

@@ -1,5 +1,5 @@
-<div fxLayout="row">
-  <div fxFlex="75" class="">
+<div class="container">
+  <div class="table-filter-container">
     <mat-form-field>
       <mat-label>Search By Name</mat-label>
       <input
@@ -19,6 +19,8 @@
       />
     </mat-form-field>
 
+  </div>
+  <div class="table-container">
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" #tabla1>
 
       <ng-container matColumnDef="name">
@@ -68,7 +70,7 @@
     ></mat-paginator>
   </div>
 
-  <div fxFlex="25">
+  <div class="captured-container">
     <app-captured-pokemons (onUncaptureEvent)="refreshPokemonTableData()"></app-captured-pokemons>
   </div>
 

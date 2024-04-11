@@ -25,9 +25,8 @@ export class CapturedPokemonsComponent implements AfterViewInit {
   toggleCaptured(pokemonRow: Pokemon) {
     this.pokemonDataService.toggleCaptured(pokemonRow).subscribe(() => {
       this.refreshTableData$()
+      this.onUncaptureEvent.emit()
     })
-
-    this.onUncaptureEvent.emit()
   }
 
   retrieveCaptured() {

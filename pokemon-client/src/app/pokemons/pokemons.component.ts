@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Pokemon } from '../pokemon';
 import { PokemonDataService } from '../pokemon-data.service';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -9,7 +8,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { FormControl } from '@angular/forms';
-
 
 import { catchError, map, startWith, switchMap, of as observableOf, merge, Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -20,7 +18,6 @@ import { CapturedPokemonsComponent } from './captured-pokemons.component';
   selector: 'app-pokemons',
   standalone: true,
   imports: [CapturedPokemonsComponent,
-            FlexLayoutModule,
             MatTableModule,
             MatPaginatorModule,
             CommonModule,
@@ -32,7 +29,6 @@ import { CapturedPokemonsComponent } from './captured-pokemons.component';
 })
 export class PokemonsComponent implements AfterViewInit {
   columns = ['name', 'type', 'status', 'image']
-  pokemons: Pokemon[] = []
   dataSource = new MatTableDataSource<Pokemon>();
   isLoading = false;
   totalCount: number = 0
@@ -96,8 +92,7 @@ export class PokemonsComponent implements AfterViewInit {
         })
       )
       .subscribe((pokemons) => {
-        this.pokemons = pokemons;
-        this.dataSource = new MatTableDataSource<Pokemon>(this.pokemons);
+        this.dataSource = new MatTableDataSource<Pokemon>(pokemons);
       });
   }
 }
