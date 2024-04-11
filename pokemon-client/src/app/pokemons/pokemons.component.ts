@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Pokemon } from '../pokemon';
 import { PokemonDataService } from '../pokemon-data.service';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -11,14 +12,17 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms'
 import { FormControl } from '@angular/forms';
 
 
-import { catchError, map, startWith, switchMap, of as observableOf, merge } from 'rxjs';
+import { catchError, map, startWith, switchMap, of as observableOf, merge, Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { CapturedPokemonsComponent } from './captured-pokemons.component';
 
 
 @Component({
   selector: 'app-pokemons',
   standalone: true,
-  imports: [MatTableModule,
+  imports: [CapturedPokemonsComponent,
+            FlexLayoutModule,
+            MatTableModule,
             MatPaginatorModule,
             CommonModule,
             MatChipsModule,
@@ -45,6 +49,20 @@ export class PokemonsComponent implements AfterViewInit {
 
   getTableData$(nameFilter: string, typeFilter: string, pageNumber: number) {
     return this.pokemonDataService.getPokemons(nameFilter, typeFilter, pageNumber);
+  }
+
+  toggleCaptured(pokemonRow: Pokemon) {
+    this.pokemonDataService.toggleCaptured(pokemonRow).subscribe(() => {
+      var nameFilter = this.nameFilter.value == null ? '' : this.nameFilter.value;
+      var typeFilter = this.typeFilter.value == null ? '' : this.typeFilter.value;
+      this.getTableData$(
+        nameFilter,
+        typeFilter,
+        this.paginator.pageIndex
+      ).subscribe((data) => {
+        this.dataSource = new MatTableDataSource<Pokemon>(data.results)
+      })
+    })
   }
 
   ngAfterViewInit(): void {
