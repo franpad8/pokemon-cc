@@ -2,6 +2,8 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Pokemon } from '../pokemon';
 import { PokemonDataService } from '../pokemon-data.service';
 import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatPaginator } from '@angular/material/paginator';
@@ -12,6 +14,7 @@ import { FormControl } from '@angular/forms';
 import { catchError, map, startWith, switchMap, of as observableOf, merge, Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { CapturedPokemonsComponent } from './captured-pokemons.component';
+import { ProgressSpinnerDialogComponent } from '../ui/progress-spinner-dialog.component';
 
 
 @Component({
@@ -19,6 +22,7 @@ import { CapturedPokemonsComponent } from './captured-pokemons.component';
   standalone: true,
   imports: [CapturedPokemonsComponent,
             MatTableModule,
+            MatButtonModule,
             MatPaginatorModule,
             CommonModule,
             FormsModule,
@@ -40,7 +44,7 @@ export class PokemonsComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(CapturedPokemonsComponent, { static: false }) capturedPokemonComponent!: CapturedPokemonsComponent
 
-  constructor(private pokemonDataService: PokemonDataService) {}
+  constructor(private pokemonDataService: PokemonDataService, private dialog: MatDialog) {}
 
   getTableData$(nameFilter: string, typeFilter: string, pageNumber: number) {
     return this.pokemonDataService.getPokemons(nameFilter, typeFilter, pageNumber);
@@ -50,6 +54,20 @@ export class PokemonsComponent implements AfterViewInit {
     this.pokemonDataService.toggleCaptured(pokemonRow).subscribe(() => {
       this.refreshPokemonTableData()
       this.capturedPokemonComponent.retrieveCaptured()
+    })
+  }
+
+  importPokemonData() {
+    let dialogRef: MatDialogRef<ProgressSpinnerDialogComponent> = this.dialog.open(ProgressSpinnerDialogComponent, {
+      panelClass: 'transparent',
+      disableClose: true
+    });
+    this.pokemonDataService.importPokemons().subscribe(() => {
+      this.refreshPokemonTableData()
+      dialogRef.close()
+    },
+    () => {
+      dialogRef.close()
     })
   }
 
@@ -68,7 +86,6 @@ export class PokemonsComponent implements AfterViewInit {
   ngAfterViewInit(): void {
 
     this.dataSource.paginator = this.paginator;
-
 
     merge(this.nameFilter.valueChanges, this.typeFilter.valueChanges, this.paginator.page)
       .pipe(

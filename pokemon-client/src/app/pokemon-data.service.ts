@@ -14,6 +14,13 @@ export class PokemonDataService {
 
   constructor(private http: HttpClient) { }
 
+  importPokemons() {
+    return this.http.post(
+      `${this.baseUrl}/pokemons/import`,
+      {}
+    )
+  }
+
   getPokemons(nameFilter: string, typeFilter: string, pageNumber: number): Observable<PokemonIndexData> {
     return this.http.get<PokemonIndexData>(
       `${this.baseUrl}/pokemons.json?page=${pageNumber}&name=${nameFilter}&type=${typeFilter}`,

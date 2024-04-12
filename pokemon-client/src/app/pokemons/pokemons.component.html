@@ -19,6 +19,8 @@
       />
     </mat-form-field>
 
+    <button mat-flat-button color="primary" (click)="importPokemonData()">Import Data</button>
+
   </div>
   <div class="table-container">
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" #tabla1>
@@ -46,8 +48,6 @@
         <th mat-header-cell *matHeaderCellDef> Image </th>
         <td mat-cell *matCellDef="let pokemon"> <img class="images" [src]="pokemon.image"/></td>
       </ng-container>
-
-
 
       <tr mat-header-row *matHeaderRowDef="columns"></tr>
       <tr
