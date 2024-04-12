@@ -2,7 +2,7 @@
 
 Interview Challenge for ControlCar's Full Stack Software Engineer position.
 
-![alt text](image.png)
+![alt text](demo-pokemon.gif)
 
 ## Requirements
 
