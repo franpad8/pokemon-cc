@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Pokemon } from '../pokemon';
-import { PokemonDataService } from '../pokemon-data.service';
+import { PokemonDataService } from './pokemon-data.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";

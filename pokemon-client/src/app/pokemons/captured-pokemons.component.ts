@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { AfterViewInit, Component } from "@angular/core";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { Pokemon } from "../pokemon";
-import { PokemonDataService } from "../pokemon-data.service";
+import { PokemonDataService } from "./pokemon-data.service";
 import { Output, EventEmitter } from '@angular/core';
 
 @Component({
