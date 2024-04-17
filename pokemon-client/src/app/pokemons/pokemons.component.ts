@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { Pokemon } from '../pokemon';
 import { PokemonDataService } from './pokemon-data.service';
 import { MatTableModule } from '@angular/material/table';
@@ -11,7 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { FormControl } from '@angular/forms';
 
-import { catchError, map, startWith, switchMap, of as observableOf, merge, Observable } from 'rxjs';
+import { catchError, map, startWith, switchMap, of as observableOf, merge, Subject, Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { CapturedPokemonsComponent } from './captured-pokemons.component';
 import { ProgressSpinnerDialogComponent } from '../ui/progress-spinner-dialog.component';
@@ -40,21 +40,20 @@ export class PokemonsComponent implements AfterViewInit {
   pageLength: number = 10
   nameFilter = new FormControl();
   typeFilter = new FormControl();
+  dataChanged$!: Observable<void>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(CapturedPokemonsComponent, { static: false }) capturedPokemonComponent!: CapturedPokemonsComponent
 
-  constructor(private pokemonDataService: PokemonDataService, private dialog: MatDialog) {}
+  constructor(private pokemonDataService: PokemonDataService, private dialog: MatDialog) {
+    this.dataChanged$ = pokemonDataService.dataChangedSubject
+  }
 
   getTableData$(nameFilter: string, typeFilter: string, pageNumber: number) {
     return this.pokemonDataService.getPokemons(nameFilter, typeFilter, pageNumber);
   }
 
   toggleCaptured(pokemonRow: Pokemon) {
-    this.pokemonDataService.toggleCaptured(pokemonRow).subscribe(() => {
-      this.refreshPokemonTableData()
-      this.capturedPokemonComponent.retrieveCaptured()
-    })
+    this.pokemonDataService.toggleCaptured(pokemonRow).subscribe()
   }
 
   importPokemonData() {
@@ -63,7 +62,6 @@ export class PokemonsComponent implements AfterViewInit {
       disableClose: true
     });
     this.pokemonDataService.importPokemons().subscribe(() => {
-      this.refreshPokemonTableData()
       dialogRef.close()
     },
     () => {
@@ -71,23 +69,11 @@ export class PokemonsComponent implements AfterViewInit {
     })
   }
 
-  refreshPokemonTableData () {
-    var nameFilter = this.nameFilter.value == null ? '' : this.nameFilter.value;
-    var typeFilter = this.typeFilter.value == null ? '' : this.typeFilter.value;
-    this.getTableData$(
-      nameFilter,
-      typeFilter,
-      this.paginator.pageIndex
-    ).subscribe((data) => {
-      this.dataSource = new MatTableDataSource<Pokemon>(data.results)
-    })
-  }
-
   ngAfterViewInit(): void {
 
     this.dataSource.paginator = this.paginator;
 
-    merge(this.nameFilter.valueChanges, this.typeFilter.valueChanges, this.paginator.page)
+    merge(this.nameFilter.valueChanges, this.typeFilter.valueChanges, this.paginator.page, this.dataChanged$)
       .pipe(
         startWith({}),
         switchMap(() => {
