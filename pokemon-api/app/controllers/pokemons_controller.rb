@@ -4,10 +4,10 @@ class PokemonsController < ApplicationController
   # GET /pokemons
   def index
     query = Pokemon.all
-    query = query.where('name LIKE ?', "#{params['name']}%") unless params['name'].nil?
-    query = query.where('type LIKE ?', "#{params['type']}%") unless params['type'].nil?
+    query = query.where("name LIKE ?", "#{params["name"]}%") unless params["name"].nil?
+    query = query.where("type LIKE ?", "#{params["type"]}%") unless params["type"].nil?
 
-    @current_page = params['page'].to_i
+    @current_page = params["page"].to_i
     @total_count = query.count
     @page_count = (@total_count % 10).positive? ? @total_count / 10 + 1 : @total_count / 10
     @current_page = 0 if @current_page >= @page_count
@@ -28,7 +28,7 @@ class PokemonsController < ApplicationController
   # POST /import_pokemons
   def import
     ::Pokemons::BulkCreateService.call
-    render json: { message: 'ok', status: :created }
+    render json: { message: "ok", status: :created }
   end
 
   # PATCH/PUT /pokemons/1/capture/

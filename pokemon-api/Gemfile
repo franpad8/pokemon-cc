@@ -51,3 +51,11 @@ group :development do
   gem 'error_highlight', '>= 0.4.0', platforms: [:ruby]
   gem 'rubocop'
 end
+
+gem "rubocop-performance", "~> 1.21"
+
+gem "rubocop-rails", "~> 2.24"
+
+gem "ripper-tags", "~> 1.0"
+
+gem "faraday-typhoeus", "~> 1.1"
