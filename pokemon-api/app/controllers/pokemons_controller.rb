@@ -33,13 +33,13 @@ class PokemonsController < ApplicationController
 
   # PATCH/PUT /pokemons/1/capture/
   def capture
-    ::Pokemons::CaptureService.call(@pokemon)
+    @pokemon.capture
     render json: @pokemon
   end
 
   # DELETE /pokemons/1
   def destroy
-    @pokemon.update(captured: false)
+    @pokemon.uncapture
     render json: @pokemon
   end
 
