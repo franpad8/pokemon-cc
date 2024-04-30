@@ -3,7 +3,7 @@ import { AfterViewInit, Component, Input } from "@angular/core";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { Pokemon } from "../pokemon";
 import { PokemonDataService } from "./pokemon-data.service";
-import { Observable, Subject } from "rxjs";
+import { Observable, Subject, startWith } from "rxjs";
 
 @Component({
   selector: 'app-captured-pokemons',
@@ -29,12 +29,16 @@ export class CapturedPokemonsComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.dataChanged$.subscribe(() => {
-      this.refreshTableData$()
-    })
+    this.dataChanged$
+      .pipe(
+        startWith({})
+      )
+      .subscribe(() => {
+        this.refreshTableData()
+      })
   }
 
-  private refreshTableData$() {
+  private refreshTableData() {
     this.pokemonDataService.getCaptured().subscribe(data => {
       this.dataSource = new MatTableDataSource<Pokemon>(data.results)
     })
